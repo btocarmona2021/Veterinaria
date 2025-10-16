@@ -59,13 +59,13 @@ class ServicioModel:
             conn.close()
         
     @staticmethod
-    def crear_servicio(data: dict):
+    def crear_servicio(self):
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
                     "INSERT INTO servicios (nombre, descripcion, precio, duracion_estimada) VALUES (%s, %s, %s, %s)",
-                    (data['nombre'], data['descripcion'], data['precio'], data['duracion_estimada'])
+                    (self.nombre, self.descripcion, self.precio, self.duracion_estimada)
                 )
                 conn.commit()
                 lastRow = cursor.lastrowid
@@ -79,13 +79,13 @@ class ServicioModel:
         finally:
             conn.close()
     @staticmethod
-    def mmodificar_servicio(data: dict):
+    def mmodificar_servicio(self):
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
                     "UPDATE servicios SET nombre = %s, descripcion = %s, precio = %s, duracion_estimada = %s WHERE id = %s",
-                    (data['nombre'], data['descripcion'], data['precio'], data['duracion_estimada'], data['id'])
+                    (self.nombre, self.descripcion, self.precio, self.duracion_estimada, self.id)
                 )
                 conn.commit()
                 return True
@@ -96,11 +96,11 @@ class ServicioModel:
             conn.close()
     
     @staticmethod
-    def eliminar_servicio(id: int):
+    def eliminar_servicio(self):
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
-                cursor.execute("DELETE FROM servicios WHERE id = %s", (id,))
+                cursor.execute("DELETE FROM servicios WHERE id = %s", (self.id,))
                 conn.commit()
                 return True
         except Exception as e:

@@ -94,22 +94,22 @@ class MascotaModel:
             conn.close()
 
     @staticmethod
-    def crear_mascota(data: dict):
+    def crear_mascota(self):
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO datas (nombre, especie, raza, edad, fecha_nacimiento, sexo, color, peso, id_usuario) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    "INSERT INTO mascotas (nombre, especie, raza, edad, fecha_nacimiento, sexo, color, peso, id_usuario) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                     (
-                        data["nombre"],
-                        data["especie"],
-                        data["raza"],
-                        data["edad"],
-                        data["fecha_nacimiento"],
-                        data["sexo"],
-                        data["color"],
-                        data["peso"],
-                        data["usuario"],
+                        self.nombre,
+                        self.especie,
+                        self.raza,
+                        self.edad,
+                        self.fecha_nacimiento,
+                        self.sexo,
+                        self.color,
+                        self.peso,
+                        self.usuario,
                     ),
                 )
                 conn.commit()
