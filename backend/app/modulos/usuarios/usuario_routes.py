@@ -14,6 +14,7 @@ def listar_usuarios():
 def obtener_usuario(id):
     try:
         usuario = UsuarioController.obtener_usuario(id)
+        print(usuario)
         if usuario:
             return jsonify(usuario), 200
         else:

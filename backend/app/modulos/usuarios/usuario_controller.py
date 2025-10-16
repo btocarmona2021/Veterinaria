@@ -10,7 +10,6 @@ class UsuarioController:
     @staticmethod
     def obtener_usuario(id):
         usuario = UsuarioModel(id=id).obtener_usuario()
-        print(usuario)
         return usuario
 
     @staticmethod

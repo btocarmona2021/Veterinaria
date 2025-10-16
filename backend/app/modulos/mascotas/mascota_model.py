@@ -1,4 +1,4 @@
-from ..database.conectDB import conectarDB
+from ...database.conectDB import conectarDB
 from ..usuarios.usuario_model import UsuarioModel as Usuario
 
 
@@ -66,28 +66,24 @@ class MascotaModel:
         try:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("SELECT * FROM mascotas")
-                mascotas = []
                 maskotas = cursor.fetchall()
-                usuario = Usuario(mascota["id_usuario"])
-                
-                
-
+                return maskotas
         except Exception as e:
             print(f"Error al obtener las datas: {e}")
             return []
         finally:
             conn.close()
 
-    @staticmethod
     def obtener_mascota(self):
+        conn = conectarDB.conectar()
         if not self.id:
             return None
-        conn = conectarDB.conectar()
         try:
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute("SELECT * FROM datas WHERE id = %s", (self.id,))
+                cursor.execute("SELECT * FROM mascotas WHERE id = %s", (self.id,))
                 data = cursor.fetchone()
                 if data:
+                    print(data)
                     return data
                 else:
                     return None
@@ -162,7 +158,7 @@ class MascotaModel:
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
-                cursor.execute("DELETE FROM datas WHERE id = %s", (self.id,))
+                cursor.execute("DELETE FROM mascotas WHERE id = %s", (self.id,))
                 conn.commit()
                 return True
         except Exception as e:
