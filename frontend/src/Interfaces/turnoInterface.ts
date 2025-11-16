@@ -1,21 +1,28 @@
 export interface Turno {
-  id: number
-  fecha_hora: string
+  estado:         string;
+  fecha_creacion: string;
+  fecha_hora:     string;
+  id:             number;
+  mascota:        Mascota;
+  notas:          string;
+  servicio:       Servicio;
+  veterinario:    Veterinario;
+}
 
-  id_mascota: number
-  id_veterinario?: number
-  id_servicio?: number
+export interface Mascota {
+  id:     number;
+  nombre: string;
+  raza:   string;
+}
 
-  estado: 'pendiente' | 'confirmado' | 'completado' | 'cancelado'
-  notas?: string
-  fecha_creacion?: string
+export interface Servicio {
+  id:     number;
+  nombre: string;
+  precio: string;
+}
 
-
-  mascota_nombre?: string
-  mascota_especie?: string
-
-  veterinario_nombre?: string
-  veterinario_apellido?: string
-
-  servicio_nombre?: string
+export interface Veterinario {
+  apellido: string;
+  id:       number;
+  nombre:   string;
 }

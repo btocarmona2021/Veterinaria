@@ -17,6 +17,8 @@ export const useHistorialStore = defineStore('historialStore', {
         this.cargando = true
         const res = await historialServices.obtenerHistoriales()
         this.historiales = res.data
+        console.log(this.historiales);
+        
       } catch (err: any) {
         this.error = err.message
       } finally {
