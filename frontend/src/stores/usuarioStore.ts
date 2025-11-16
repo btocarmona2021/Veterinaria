@@ -89,7 +89,6 @@ export const useUsuarioStore = defineStore('usuarioStore', {
         if (this.usuario?.id === id) {
           this.usuario = null
         }
-
         return true
       } catch (err: any) {
         this.error = err.message || 'Error al eliminar usuario'

@@ -14,7 +14,7 @@ export default {
     return api.post('/usuario', usuario)
   },
   eliminarUsuario(id: number) {
-    return api.delete(`/usuario/${id}`)
+    return api.put(`/usuario/${id}`)
   },
   modificarUsuario(id: number, usuario: Usuario) {
     return api.put(`/usuario/${id}`, usuario)

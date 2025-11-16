@@ -1,20 +1,39 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+// 📌 STORES
 import { useTurnoStore } from '@/stores/turnoStore'
+import { useMascotaStore } from '@/stores/mascotaStore'
+import { useUsuarioStore } from '@/stores/usuarioStore'
+import { useServicioStore } from '@/stores/servicioStore'
+
 import type { Turno } from '@/Interfaces/turnoInterface'
 
+// 📌 Instancias de stores
 const turnoStore = useTurnoStore()
+const mascotaStore = useMascotaStore()
+const usuarioStore = useUsuarioStore()
+const servicioStore = useServicioStore()
 
+// 📌 Campos del formulario
 const mascotaId = ref<number | null>(null)
 const veterinarioId = ref<number | null>(null)
+const servicioId = ref<number | null>(null)
 const fecha = ref('')
 const hora = ref('')
 const motivo = ref('')
 
 const error = ref('')
 
+onMounted(() => {
+  mascotaStore.obtenerMascotas()
+  usuarioStore.obtenerUsuarios()    // veterinarios salen de usuarios
+  servicioStore.obtenerServicios()  // cargar lista de servicios
+})
+
+// 📌 Crear turno
 const crearTurno = async () => {
-  if (!mascotaId.value || !veterinarioId.value || !fecha.value || !hora.value) {
+  if (!mascotaId.value || !veterinarioId.value || !servicioId.value || !fecha.value || !hora.value) {
     error.value = 'Todos los campos son obligatorios.'
     return
   }
@@ -23,6 +42,7 @@ const crearTurno = async () => {
     id: 0,
     mascota_id: mascotaId.value,
     veterinario_id: veterinarioId.value,
+    servicio_id: servicioId.value,
     fecha: fecha.value,
     hora: hora.value,
     motivo: motivo.value,
@@ -34,6 +54,7 @@ const crearTurno = async () => {
 
     mascotaId.value = null
     veterinarioId.value = null
+    servicioId.value = null
     fecha.value = ''
     hora.value = ''
     motivo.value = ''
@@ -55,29 +76,70 @@ const crearTurno = async () => {
     <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
     <form @submit.prevent="crearTurno">
+
+      <!-- SELECT MASCOTA -->
       <div class="mb-3">
-        <label class="form-label">ID Mascota</label>
-        <input v-model="mascotaId" type="number" class="form-control" />
+        <label class="form-label">Mascota</label>
+        <select v-model="mascotaId" class="form-select">
+          <option value="">Seleccione una mascota</option>
+          <option
+            v-for="m in mascotaStore.mascotas"
+            :key="m.id"
+            :value="m.id"
+          >
+            {{ m.nombre }} — (Dueño: {{ m.duenio_id }})
+          </option>
+        </select>
       </div>
 
+      <!-- SELECT VETERINARIO -->
       <div class="mb-3">
-        <label class="form-label">ID Veterinario</label>
-        <input v-model="veterinarioId" type="number" class="form-control" />
+        <label class="form-label">Veterinario</label>
+        <select v-model="veterinarioId" class="form-select">
+          <option value="">Seleccione un veterinario</option>
+
+          <option
+            v-for="v in usuarioStore.usuarios.filter(u => u.rol === 'veterinario')"
+            :key="v.id"
+            :value="v.id"
+          >
+            {{ v.nombre }} {{ v.apellido }}
+          </option>
+        </select>
       </div>
 
+      <!-- SELECT SERVICIO -->
+      <div class="mb-3">
+        <label class="form-label">Servicio</label>
+        <select v-model="servicioId" class="form-select">
+          <option value="">Seleccione un servicio</option>
+
+          <option
+            v-for="s in servicioStore.servicios"
+            :key="s.id"
+            :value="s.id"
+          >
+            {{ s.nombre }} — ${{ s.precio }} ({{ s.duracion_estimada }} min)
+          </option>
+        </select>
+      </div>
+
+      <!-- FECHA -->
       <div class="mb-3">
         <label class="form-label">Fecha</label>
         <input v-model="fecha" type="date" class="form-control" />
       </div>
 
+      <!-- HORA -->
       <div class="mb-3">
         <label class="form-label">Hora</label>
         <input v-model="hora" type="time" class="form-control" />
       </div>
 
+      <!-- MOTIVO -->
       <div class="mb-3">
         <label class="form-label">Motivo</label>
-        <input v-model="motivo" type="text" class="form-control" />
+        <input v-model="motivo" type="text" class="form-control" placeholder="Motivo del turno..." />
       </div>
 
       <button class="btn btn-primary">Crear Turno</button>

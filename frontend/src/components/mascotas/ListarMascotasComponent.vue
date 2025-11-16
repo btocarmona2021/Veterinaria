@@ -52,8 +52,8 @@ function editarMascota(mascota: Mascota) {
           <td>{{ mascota.nombre }}</td>
           <td>{{ mascota.especie }}</td>
           <td>{{ mascota.raza }}</td>
-          <td>{{ mascota.edad }}</td>
-          <td>{{ mascota.id_usuario }}</td>
+          <td>{{ mascota.edad }} Meses</td>
+          <td>{{ mascota.duenio.nombre +" "+mascota.duenio.apellido }}</td>
           <td>
             <button class="btn btn-sm btn-primary me-1" @click="editarMascota(mascota)">Editar</button>
             <button class="btn btn-sm btn-danger" @click="abrirModalEliminar(mascota)">Eliminar</button>
