@@ -5,41 +5,20 @@ class ServicioController:
 
     @staticmethod
     def obtener_servicios():
-        servicios = ServicioModel.obtener_servicios()
-        return servicios
+        return ServicioModel.obtener_servicios()
 
     @staticmethod
     def obtener_servicio(id):
-        servicio = ServicioModel.obtener_servicio(id)
-        if servicio:
-            return servicio
+        return ServicioModel.obtener_servicio(id)
 
     @staticmethod
-    def crear_servicio(data: dict):
-        servicio = ServicioModel(
-            data["id"],
-            data["nombre"],
-            data["descripcion"],
-            data["precio"],
-            data["duracion_estimada"],
-        )
-        result = ServicioModel.crear_servicio()
-        return result
+    def crear_servicio(data):
+        return ServicioModel.crear_servicio(data)
 
     @staticmethod
-    def modificar_servicio(data: dict):
-        servicio = ServicioModel(
-            data["id"],
-            data["nombre"],
-            data["descripcion"],
-            data["precio"],
-            data["duracion_estimada"],
-        )
-        result = ServicioModel.modificar_servicio(servicio)
-        return result
-    
+    def modificar_servicio(id, data):
+        return ServicioModel.modificar_servicio(id, data)
+
     @staticmethod
     def eliminar_servicio(id):
-        servicio = ServicioModel(id=id)
-        result = ServicioModel.eliminar_servicio(servicio)
-        return result
+        return ServicioModel.eliminar_servicio(id)

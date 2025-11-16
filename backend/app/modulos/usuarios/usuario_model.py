@@ -1,10 +1,11 @@
 from ...database.conectDB import conectarDB
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class UsuarioModel:
     def __init__(
         self,
-        id=0,
+        id=None,
         nombre="",
         apellido="",
         email="",
@@ -12,9 +13,9 @@ class UsuarioModel:
         telefono="",
         direccion="",
         rol="cliente",
-        especialidad="",
+        especialidad=None, 
         disponible=True,
-        fecha_registro="",
+        fecha_registro=None, 
         activo=True,
     ):
         self.id = id
@@ -45,109 +46,54 @@ class UsuarioModel:
             "activo": self.activo,
         }
 
-
-    @staticmethod
-    def deserializar(data: dict):
-        return UsuarioModel(
-            id=data.get("id", 0),
-            nombre=data.get("nombre", ""),
-            apellido=data.get("apellido", ""),
-            email=data.get("email", ""),
-            password=data.get("password", ""),
-            telefono=data.get("telefono", ""),
-            direccion=data.get("direccion", ""),
-            rol=data.get("rol", "cliente"),
-            especialidad=data.get("especialidad", ""),
-            disponible=data.get("disponible", True),
-            fecha_registro=data.get("fecha_registro", ""),
-            activo=data.get("activo", True),
-        )
-
     @staticmethod
     def obtener_usuarios():
         conn = conectarDB.conectar()
         if conn is None:
             print("No se pudo conectar a la base de datos.")
             return []
+
         try:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("SELECT * FROM usuarios")
-                usuarios = cursor.fetchall()
-                return usuarios
+                return cursor.fetchall()
         except Exception as ex:
-            print(f"Something went wrong {ex}")
+            print(f"Error al obtener usuarios: {ex}")
             return []
         finally:
             conn.close()
-
 
     def obtener_usuario(self):
         conn = conectarDB.conectar()
         if conn is None:
             print("No se puede conectar a la base de datos")
-            return []
+            return False
+
         try:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("SELECT * FROM usuarios WHERE id=%s", (self.id,))
-                usuario = cursor.fetchone()
-                if usuario:
-                    return usuario
-                else:
-                    return False
+                return cursor.fetchone()
         except Exception as ex:
-            print(f"Ha ocurrido un error {ex}")
-        finally:
-            conn.close()
-
-
-    def crear_usuario(self):
-        conn = conectarDB.conectar()
-        password_encriptado = generate_password_hash(self.password, method='sha256')
-        
-        if conn is None:
-            return []
-        try:
-            with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(
-                    "INSERT INTO usuarios (id, nombre, apellido, email, password, telefono, direccion, rol, especialidad, disponible, fecha_registro, activo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                    (
-                        self.id,
-                        self.nombre,
-                        self.apellido,
-                        self.email,
-                        password_encriptado,
-                        self.telefono,
-                        self.direccion,
-                        self.rol,
-                        self.especialidad,
-                        self.disponible,
-                        self.fecha_registro,
-                        self.activo,
-                    ),
-                )
-            conn.commit()
-            registro = cursor.lastrowid
-            if registro:
-                return True
-            else:
-                return False
-        except Exception as ex:
-            print(f"Ha ocurrido un error {ex}")
+            print(f"Error al obtener usuario: {ex}")
             return False
         finally:
             conn.close()
-    
-    
-    def modificar_usuario(self):
+
+    def crear_usuario(self):
         conn = conectarDB.conectar()
-        password_encriptado = generate_password_hash(self.password,)
-        
         if conn is None:
-            return []
+            return False
+
+        password_encriptado = generate_password_hash(self.password, method="sha256")
+
         try:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute(
-                    "UPDATE usuarios SET nombre=%s, apellido=%s, email=%s, password=%s, telefono=%s, direccion=%s, rol=%s, especialidad=%s, disponible=%s, fecha_registro=%s, activo=%s WHERE id=%s",
+                    """
+                    INSERT INTO usuarios 
+                    (nombre, apellido, email, password, telefono, direccion, rol, especialidad, disponible, activo)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """,
                     (
                         self.nombre,
                         self.apellido,
@@ -158,29 +104,67 @@ class UsuarioModel:
                         self.rol,
                         self.especialidad,
                         self.disponible,
-                        self.fecha_registro,
+                        self.activo,
+                    ),
+                )
+                conn.commit()
+                return cursor.lastrowid 
+        except Exception as ex:
+            print(f"Error al crear usuario: {ex}")
+            return False
+        finally:
+            conn.close()
+
+    def modificar_usuario(self):
+        conn = conectarDB.conectar()
+        if conn is None:
+            return False
+
+        password_encriptado = generate_password_hash(self.password, method="sha256")
+
+        try:
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(
+                    """
+                    UPDATE usuarios
+                    SET nombre=%s, apellido=%s, email=%s, password=%s, telefono=%s,
+                        direccion=%s, rol=%s, especialidad=%s, disponible=%s, activo=%s
+                    WHERE id=%s
+                    """,
+                    (
+                        self.nombre,
+                        self.apellido,
+                        self.email,
+                        password_encriptado,
+                        self.telefono,
+                        self.direccion,
+                        self.rol,
+                        self.especialidad,
+                        self.disponible,
                         self.activo,
                         self.id,
                     ),
                 )
-            conn.commit()
-            return True
+                conn.commit()
+                return cursor.rowcount > 0
         except Exception as ex:
-            return (f"Ha ocurrido un error {ex}")
+            print(f"Error al modificar usuario: {ex}")
+            return False
         finally:
             conn.close()
-            
+
     def eliminar_usuario(self):
         conn = conectarDB.conectar()
         if conn is None:
-            return []
+            return False
+
         try:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("DELETE FROM usuarios WHERE id=%s", (self.id,))
-            conn.commit()
-            return True
+                conn.commit()
+                return cursor.rowcount > 0
         except Exception as ex:
-            print({ex})
+            print(f"Error al eliminar usuario: {ex}")
             return False
         finally:
             conn.close()

@@ -18,15 +18,9 @@ class ServicioModel:
             "duracion_estimada": self.duracion_estimada,
         }
 
-    @staticmethod
-    def deserializar(data:dict):
-        return ServicioModel(
-            id=data.get("id", 0),
-            nombre=data.get("nombre", ""),
-            descripcion=data.get("descripcion", ""),
-            precio=data.get("precio", 0),
-            duracion_estimada=data.get("duracion_estimada", 0),
-        )
+    # ===================================================
+    # CRUD
+    # ===================================================
 
     @staticmethod
     def obtener_servicios():
@@ -34,79 +28,89 @@ class ServicioModel:
         try:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("SELECT * FROM servicios")
-                servicios = cursor.fetchall()
+                rows = cursor.fetchall()
+                return rows
         except Exception as e:
-            print(f'Error al obtener los servicios: {e}')
-            servicios = []  
+            print(f"Error al obtener los servicios: {e}")
+            return []
         finally:
             conn.close()
-            
+
     @staticmethod
-    def obtener_servicio(self):
+    def obtener_servicio(id):
         conn = conectarDB.conectar()
         try:
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute("SELECT * FROM servicios WHERE id = %s", (self.id,))
-                servicio = cursor.fetchone()
-                if servicio:
-                    return servicio
-                else:
-                    return None
+                cursor.execute("SELECT * FROM servicios WHERE id = %s", (id,))
+                return cursor.fetchone()
         except Exception as e:
-            print(f'Error al obtener el servicio: {e}')
+            print(f"Error al obtener el servicio: {e}")
             return None
         finally:
             conn.close()
-        
+
     @staticmethod
-    def crear_servicio(self):
+    def crear_servicio(data):
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO servicios (nombre, descripcion, precio, duracion_estimada) VALUES (%s, %s, %s, %s)",
-                    (self.nombre, self.descripcion, self.precio, self.duracion_estimada)
+                    """
+                    INSERT INTO servicios (nombre, descripcion, precio, duracion_estimada)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    (
+                        data["nombre"],
+                        data["descripcion"],
+                        data["precio"],
+                        data["duracion_estimada"],
+                    ),
                 )
                 conn.commit()
-                lastRow = cursor.lastrowid
-                if lastRow:
-                    return True
-                else:
-                    return None
+                return cursor.lastrowid
         except Exception as e:
-            print(f'Error al crear el servicio: {e}')
-            return False
+            print(f"Error al crear el servicio: {e}")
+            return None
         finally:
             conn.close()
+
     @staticmethod
-    def mmodificar_servicio(self):
+    def modificar_servicio(id, data):
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "UPDATE servicios SET nombre = %s, descripcion = %s, precio = %s, duracion_estimada = %s WHERE id = %s",
-                    (self.nombre, self.descripcion, self.precio, self.duracion_estimada, self.id)
+                    """
+                    UPDATE servicios 
+                    SET nombre=%s, descripcion=%s, precio=%s, duracion_estimada=%s
+                    WHERE id=%s
+                    """,
+                    (
+                        data["nombre"],
+                        data["descripcion"],
+                        data["precio"],
+                        data["duracion_estimada"],
+                        id,
+                    ),
                 )
                 conn.commit()
-                return True
+                return cursor.rowcount > 0
         except Exception as e:
-            print(f'Error al actualizar el servicio: {e}')
+            print(f"Error al modificar el servicio: {e}")
             return False
         finally:
             conn.close()
-    
+
     @staticmethod
-    def eliminar_servicio(self):
+    def eliminar_servicio(id):
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
-                cursor.execute("DELETE FROM servicios WHERE id = %s", (self.id,))
+                cursor.execute("DELETE FROM servicios WHERE id = %s", (id,))
                 conn.commit()
-                return True
+                return cursor.rowcount > 0
         except Exception as e:
-            print(f'Error al eliminar el servicio: {e}')
+            print(f"Error al eliminar el servicio: {e}")
             return False
         finally:
             conn.close()
-            
-            
