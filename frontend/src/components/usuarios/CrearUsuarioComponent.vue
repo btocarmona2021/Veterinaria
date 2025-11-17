@@ -13,6 +13,8 @@ const password = ref('')
 const telefono = ref('')
 const direccion = ref('')
 const rol = ref<'administrador' | 'veterinario' | 'cliente'>('cliente')
+const fecha_registro = ref('')
+const especialidad = ref<'Cirujano'| 'Anestesista'>('Cirujano')
 
 // Error de validación
 const error = ref('')
@@ -33,9 +35,9 @@ const crearUsuario = async () => {
     telefono: telefono.value,
     direccion: direccion.value,
     rol: rol.value,
-    especialidad: null,
+    especialidad: especialidad.value,
     disponible: true,
-    fecha_registro: '',
+    fecha_registro: fecha_registro.value,
     activo: true,
   }
 
@@ -95,6 +97,21 @@ const crearUsuario = async () => {
           <option value="veterinario">Veterinario</option>
           <option value="cliente">Cliente</option>
         </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Especialidad</label>
+        <select v-model="especialidad" class="form-select">
+          <option value="Cirujano">Cirujano</option>
+          <option value="Anestesista">Anestesista</option>
+        </select>
+      </div>
+        <div class="mb-3">
+        <label class="form-label">Fecha de Registro</label>
+        <input v-model="fecha_registro" type="date" class="form-control" />
+      </div>
+       <div class="mb-3">
+        <label class="form-label px-4">Disponible</label>
+        <input type="checkbox" checked="true" class="form-check-input " />
       </div>
       <button type="submit" class="btn btn-primary">Crear Usuario</button>
     </form>

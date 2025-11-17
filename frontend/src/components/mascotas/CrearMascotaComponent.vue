@@ -14,7 +14,7 @@ const edad = ref<number | null>(null)
 const fecha_nacimiento = ref('')
 const sexo = ref<'Macho' | 'Hembra'>('Macho')
 const color = ref('')
-const peso = ref<number | null>(null)
+const peso = ref<number|null>(null)
 const id_usuario = ref<number | null>(null) // dueño
 
 const error = ref('')
@@ -34,7 +34,7 @@ const crearMascota = async () => {
     fecha_nacimiento: fecha_nacimiento.value,
     sexo: sexo.value,
     color: color.value,
-    peso: peso.value || 0,
+    peso: peso.value || 0 ,
     id_usuario: id_usuario.value,
     fecha_registro: '',
   }

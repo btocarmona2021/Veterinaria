@@ -84,15 +84,17 @@ class UsuarioModel:
         if conn is None:
             return False
 
-        password_encriptado = generate_password_hash(self.password, method="sha256")
+        password_encriptado = generate_password_hash(
+            self.password, method="pbkdf2:sha256"
+        )
 
         try:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute(
                     """
                     INSERT INTO usuarios 
-                    (nombre, apellido, email, password, telefono, direccion, rol, especialidad, disponible, activo)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    (nombre, apellido, email, password, telefono, direccion, rol, especialidad, disponible, activo,fecha_registro)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,NOW())
                     """,
                     (
                         self.nombre,

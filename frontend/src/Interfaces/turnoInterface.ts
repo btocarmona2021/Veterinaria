@@ -3,10 +3,10 @@ export interface Turno {
   fecha_creacion: string;
   fecha_hora:     string;
   id:             number;
-  mascota:        Mascota;
+  mascota?:        Mascota;
   notas:          string;
-  servicio:       Servicio;
-  veterinario:    Veterinario;
+  servicio?:       Servicio;
+  veterinario?:    Veterinario;
 }
 
 export interface Mascota {

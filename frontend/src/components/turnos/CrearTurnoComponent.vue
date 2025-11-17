@@ -38,15 +38,16 @@ const crearTurno = async () => {
     return
   }
 
-  const nuevoTurno: Turno = {
-    id: 0,
-    mascota_id: mascotaId.value,
-    veterinario_id: veterinarioId.value,
-    servicio_id: servicioId.value,
-    fecha: fecha.value,
-    hora: hora.value,
-    motivo: motivo.value,
-    estado: 'pendiente'
+
+  const nuevoTurno = {
+    id:0,
+    estado: 'pendiente',
+    fecha_creacion:fecha.value,
+    fecha_hora: hora.value,
+    id_mascota: mascotaId.value,
+    notas: motivo.value,
+    id_veterinario: veterinarioId.value,
+    id_servicio: servicioId.value,
   }
 
   try {

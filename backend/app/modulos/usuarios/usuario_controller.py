@@ -12,6 +12,7 @@ class UsuarioController:
 
     @staticmethod
     def crear_usuario(data: dict):
+        print(data)
         usuario = UsuarioModel(**data)
         return usuario.crear_usuario()
 

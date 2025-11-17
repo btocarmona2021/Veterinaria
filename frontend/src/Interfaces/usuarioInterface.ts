@@ -6,8 +6,9 @@ export interface Usuario {
   telefono?: string
   direccion?: string
   rol: 'administrador' | 'veterinario' | 'cliente'
-  especialidad?: string
-  disponible?: number
+  especialidad?: 'Cirujano'| 'Anestesista'
+  disponible?: boolean
   fecha_registro?: string
-  activo: number
+  activo: boolean
+  password: string
 }

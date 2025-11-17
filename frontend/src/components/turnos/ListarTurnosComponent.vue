@@ -28,14 +28,14 @@ function editarTurno(turno: Turno) {
   console.log('Editar turno:', turno)
 }
 
-const formatearFecha = (fecha: string,tipo:string='t') => {
-  if (tipo == 'f') {
-    return new Date(fecha).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-  } else {
-    return new Date(fecha).toLocaleTimeString('es-ES', {hour: 'numeric', minute: 'numeric', second: 'numeric' })
-  }
+const formatearFecha = (fecha: string) => {
+  return new Date(fecha).toLocaleDateString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 }
-
 </script>
 
 <template>
@@ -59,11 +59,11 @@ const formatearFecha = (fecha: string,tipo:string='t') => {
       <tbody>
         <tr v-for="turno in turnoStore.turnos" :key="turno.id">
           <td>{{ turno.id }}</td>
-          <td>{{ turno.mascota.nombre }}</td>
-          <td>{{ turno.veterinario.nombre + ' ' + turno.veterinario.apellido }}</td>
-          <td>{{ formatearFecha(turno.fecha_creacion,'f')}}</td>
-          <td>{{ formatearFecha(turno.fecha_hora) }}</td>
-          <td>{{ turno.servicio.nombre }}</td>
+          <td>{{ turno.mascota?.nombre }}</td>
+          <td>{{ turno.veterinario?.nombre + ' ' + turno.veterinario?.apellido }}</td>
+          <td>{{ formatearFecha(turno.fecha_creacion) }}</td>
+          <td>{{turno.fecha_hora}}</td>
+          <td>{{ turno.servicio?.nombre }}</td>
           <td>{{ turno.estado }}</td>
 
           <td>

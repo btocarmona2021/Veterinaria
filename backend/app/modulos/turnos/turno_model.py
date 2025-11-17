@@ -29,10 +29,13 @@ class TurnoModel:
     def serializar(self, mascota=None, veterinario=None, servicio=None):
         data = {
             "id": self.id,
-            "fecha_hora": self.fecha_hora,
+            "fecha_hora": str(self.fecha_hora),
             "estado": self.estado,
             "notas": self.notas,
             "fecha_creacion": self.fecha_creacion,
+            "id_mascota": self.id_mascota,
+            "id_veterinario": self.id_veterinario,
+            "id_servicio": self.id_servicio,
         }
 
         if mascota:
@@ -58,10 +61,10 @@ class TurnoModel:
                 cursor.execute(
                     """
                     SELECT 
-                        t.id, t.fecha_hora, t.estado, t.notas, t.fecha_creacion,
-                        m.id AS mascota_id, m.nombre AS mascota_nombre, m.raza AS mascota_raza,
-                        u.id AS vet_id, u.nombre AS vet_nombre, u.apellido AS vet_apellido,
-                        s.id AS serv_id, s.nombre AS serv_nombre, s.precio AS serv_precio
+                        t.id, t.fecha_hora, t.estado, t.notas, t.fecha_creacion,t.id_mascota,t.id_servicio,t.id_veterinario,
+                        m.id AS id_masc, m.nombre AS mascota_nombre, m.raza AS mascota_raza,
+                        u.id AS id_vet, u.nombre AS vet_nombre, u.apellido AS vet_apellido,
+                        s.id AS id_serv, s.nombre AS serv_nombre, s.precio AS serv_precio
                     FROM turnos t
                     JOIN mascotas m ON t.id_mascota = m.id
                     JOIN usuarios u ON t.id_veterinario = u.id
@@ -79,21 +82,25 @@ class TurnoModel:
                     estado=r["estado"],
                     notas=r["notas"],
                     fecha_creacion=r["fecha_creacion"],
+                    id_mascota=r["id_mascota"],
+                    id_servicio=r["id_servicio"],
+                    id_veterinario=r["id_veterinario"]
+                    
                 )
                 turnos.append(
                     turno.serializar(
                         mascota={
-                            "id": r["mascota_id"],
+                            "id": r["id_masc"],
                             "nombre": r["mascota_nombre"],
                             "raza": r["mascota_raza"],
                         },
                         veterinario={
-                            "id": r["vet_id"],
+                            "id": r["id_vet"],
                             "nombre": r["vet_nombre"],
                             "apellido": r["vet_apellido"],
                         },
                         servicio={
-                            "id": r["serv_id"],
+                            "id": r["id_serv"],
                             "nombre": r["serv_nombre"],
                             "precio": r["serv_precio"],
                         },
@@ -122,6 +129,7 @@ class TurnoModel:
 
     @staticmethod
     def crear_turno(data):
+        print(data)
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
