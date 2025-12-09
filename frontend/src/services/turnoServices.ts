@@ -7,17 +7,17 @@ export default {
   },
 
   obtenerTurno(id: number) {
-    return api.get(`/turno/${id}`)
+    return api.get(`/turnos/${id}`)
   },
 
   crearTurno(turno: Turno) {
-    return api.post('/turno', turno)
+    return api.post('/turnos', turno)
   },
 
   eliminarTurno(id: number) {
-    return api.delete(`/turno/${id}`)
+    return api.delete(`/turnos/${id}`)
   },
   modificarTurno(id: number, turno: Turno) {
-    return api.put(`/turno/${id}`, turno)
+    return api.put(`/turnos/${id}`, turno)
   },
 }

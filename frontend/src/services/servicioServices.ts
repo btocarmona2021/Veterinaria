@@ -7,16 +7,16 @@ export default {
   },
 
   obtenerServicio(id: number) {
-    return api.get(`/servicio/${id}`)
+    return api.get(`/servicios/${id}`)
   },
   crearServicio(servicio: Servicio) {
-    return api.post('/servicio', servicio)
+    return api.post('/servicios', servicio)
   },
 
   eliminarServicio(id: number) {
-    return api.delete(`/servicio/${id}`)
+    return api.delete(`/servicios/${id}`)
   },
   modificarServicio(id: number, servicio: Servicio) {
-    return api.put(`/servicio/${id}`, servicio)
+    return api.put(`/servicios/${id}`, servicio)
   },
 }

@@ -18,10 +18,6 @@ class ServicioModel:
             "duracion_estimada": self.duracion_estimada,
         }
 
-    # ===================================================
-    # CRUD
-    # ===================================================
-
     @staticmethod
     def obtener_servicios():
         conn = conectarDB.conectar()

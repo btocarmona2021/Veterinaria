@@ -9,7 +9,7 @@ class TurnoModel:
         id_mascota=0,
         id_veterinario=0,
         id_servicio=0,
-        estado="pendiente",
+        estado="",
         notas="",
         fecha_creacion="",
     ):
@@ -22,12 +22,8 @@ class TurnoModel:
         self.notas = notas
         self.fecha_creacion = fecha_creacion
 
-    # ============================================================
-    # SERIALIZAR
-    # ============================================================
-
-    def serializar(self, mascota=None, veterinario=None, servicio=None):
-        data = {
+    def serializar(self):
+        return {
             "id": self.id,
             "fecha_hora": str(self.fecha_hora),
             "estado": self.estado,
@@ -38,40 +34,12 @@ class TurnoModel:
             "id_servicio": self.id_servicio,
         }
 
-        if mascota:
-            data["mascota"] = mascota
-
-        if veterinario:
-            data["veterinario"] = veterinario
-
-        if servicio:
-            data["servicio"] = servicio
-
-        return data
-
-    # ============================================================
-    # MÉTODOS ESTÁTICOS
-    # ============================================================
-
     @staticmethod
     def obtener_turnos():
         conn = conectarDB.conectar()
         try:
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(
-                    """
-                    SELECT 
-                        t.id, t.fecha_hora, t.estado, t.notas, t.fecha_creacion,t.id_mascota,t.id_servicio,t.id_veterinario,
-                        m.id AS id_masc, m.nombre AS mascota_nombre, m.raza AS mascota_raza,
-                        u.id AS id_vet, u.nombre AS vet_nombre, u.apellido AS vet_apellido,
-                        s.id AS id_serv, s.nombre AS serv_nombre, s.precio AS serv_precio
-                    FROM turnos t
-                    JOIN mascotas m ON t.id_mascota = m.id
-                    JOIN usuarios u ON t.id_veterinario = u.id
-                    JOIN servicios s ON t.id_servicio = s.id
-                    ORDER BY t.fecha_hora ASC
-                    """
-                )
+                cursor.execute("SELECT * FROM turnos ORDER BY fecha_hora ASC")
                 rows = cursor.fetchall()
 
             turnos = []
@@ -79,33 +47,15 @@ class TurnoModel:
                 turno = TurnoModel(
                     id=r["id"],
                     fecha_hora=r["fecha_hora"],
+                    id_mascota=r["id_mascota"],
+                    id_veterinario=r["id_veterinario"],
+                    id_servicio=r["id_servicio"],
                     estado=r["estado"],
                     notas=r["notas"],
                     fecha_creacion=r["fecha_creacion"],
-                    id_mascota=r["id_mascota"],
-                    id_servicio=r["id_servicio"],
-                    id_veterinario=r["id_veterinario"]
-                    
                 )
-                turnos.append(
-                    turno.serializar(
-                        mascota={
-                            "id": r["id_masc"],
-                            "nombre": r["mascota_nombre"],
-                            "raza": r["mascota_raza"],
-                        },
-                        veterinario={
-                            "id": r["id_vet"],
-                            "nombre": r["vet_nombre"],
-                            "apellido": r["vet_apellido"],
-                        },
-                        servicio={
-                            "id": r["id_serv"],
-                            "nombre": r["serv_nombre"],
-                            "precio": r["serv_precio"],
-                        },
-                    )
-                )
+                turnos.append(turno.serializar())
+
             return turnos
 
         except Exception as e:
@@ -120,7 +70,24 @@ class TurnoModel:
         try:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("SELECT * FROM turnos WHERE id=%s", (id,))
-                return cursor.fetchone()
+                row = cursor.fetchone()
+
+                if not row:
+                    return None
+
+                turno = TurnoModel(
+                    id=row["id"],
+                    fecha_hora=row["fecha_hora"],
+                    id_mascota=row["id_mascota"],
+                    id_veterinario=row["id_veterinario"],
+                    id_servicio=row["id_servicio"],
+                    estado=row["estado"],
+                    notas=row["notas"],
+                    fecha_creacion=row["fecha_creacion"],
+                )
+
+                return turno.serializar()
+
         except Exception as e:
             print("ERROR obtener_turno:", e)
             return None
@@ -129,7 +96,6 @@ class TurnoModel:
 
     @staticmethod
     def crear_turno(data):
-        print(data)
         conn = conectarDB.conectar()
         try:
             with conn.cursor() as cursor:
@@ -164,8 +130,12 @@ class TurnoModel:
                 cursor.execute(
                     """
                     UPDATE turnos SET 
-                    fecha_hora=%s, id_mascota=%s, id_veterinario=%s, id_servicio=%s,
-                    estado=%s, notas=%s
+                        fecha_hora=%s,
+                        id_mascota=%s,
+                        id_veterinario=%s,
+                        id_servicio=%s,
+                        estado=%s,
+                        notas=%s
                     WHERE id=%s
                     """,
                     (

@@ -1,13 +1,11 @@
 from flask import Blueprint, request, jsonify
 from ...database.conectDB import conectarDB
 from .mascota_controller import MascotaController
+from flask_jwt_extended import jwt_required
 
 mascota_bp = Blueprint("mascota_bp", __name__)
 
 
-# ---------------------------
-# GET - Listar todas las mascotas
-# ---------------------------
 @mascota_bp.route("/mascotas", methods=["GET"])
 def obtener_mascotas():
     try:
@@ -17,10 +15,8 @@ def obtener_mascotas():
         return jsonify({"error": str(e)}), 500
 
 
-# ---------------------------
-# GET - Obtener una mascota por ID
-# ---------------------------
-@mascota_bp.route("/mascota/<int:id>", methods=["GET"])
+@mascota_bp.route("/mascotas/<int:id>", methods=["GET"])
+@jwt_required()
 def obtener_mascota(id):
     try:
         mascota = MascotaController.obtener_mascota(id)
@@ -32,10 +28,7 @@ def obtener_mascota(id):
         return jsonify({"error": str(e)}), 500
 
 
-# ---------------------------
-# POST - Crear mascota
-# ---------------------------
-@mascota_bp.route("/mascota", methods=["POST"])
+@mascota_bp.route("/mascotas", methods=["POST"])
 def crear_mascota():
     data = request.get_json()
     try:
@@ -45,10 +38,8 @@ def crear_mascota():
         return jsonify({"error": str(e)}), 500
 
 
-# ---------------------------
-# PUT - Modificar mascota
-# ---------------------------
-@mascota_bp.route("/mascota/<int:id>", methods=["PUT"])
+@mascota_bp.route("/mascotas/<int:id>", methods=["PUT"])
+@jwt_required()
 def modificar_mascota(id):
     data = request.get_json()
     try:
@@ -58,10 +49,8 @@ def modificar_mascota(id):
         return jsonify({"error": str(e)}), 500
 
 
-# ---------------------------
-# DELETE - Eliminar mascota
-# ---------------------------
-@mascota_bp.route("/mascota/<int:id>", methods=["DELETE"])
+@mascota_bp.route("/mascotas/<int:id>", methods=["DELETE"])
+@jwt_required()
 def eliminar_mascota(id):
     try:
         resultado = MascotaController.eliminar_mascota(id)

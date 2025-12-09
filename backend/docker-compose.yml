@@ -1,0 +1,39 @@
+services:
+
+  backend:
+    container_name: backendFlask
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: "mi-servidor-mysql-1"
+      DB_USER: "root"
+      DB_PASSWORD: "root"
+      DB_NAME: "veterinaria_db"
+    networks:
+      - default_network
+    depends_on:
+      - mysql
+
+  # Este bloque NO CREA otro MySQL, solo indica que existe
+  mysql:
+    container_name: mi-servidor-mysql-1
+    image: mysql:8   # imagen que ya tenés
+    networks:
+      - default_network
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: veterinaria_db
+    # NO se expone puerto, porque ya la tenés corriendo afuera
+
+networks:
+  default_network:
+    external: true
+    name: mi-servidor_default
+
+volumes:
+  mysql_data:

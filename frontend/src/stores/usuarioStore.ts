@@ -1,100 +1,97 @@
-// stores/usuarioStore.ts
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 import usuarioServices from '@/services/usuarioServices'
 import type { Usuario } from '@/Interfaces/usuarioInterface'
 
-export const useUsuarioStore = defineStore('usuarioStore', {
-  state: () => ({
-    usuarios: [] as Usuario[],
-    usuario: null as Usuario | null,
-    cargando: false as boolean,
-    error: null as string | null,
-  }),
+export const useUsuarioStore = defineStore('usuarioStore', () => {
+  const usuarios = ref<Usuario[]>([])
+  const usuario = ref<Usuario | null>(null)
+  const cargando = ref(false)
+  const error = ref<string | null>(null)
 
-  actions: {
-    async obtenerUsuarios() {
-      this.cargando = true
-      this.error = null
+  const obtenerUsuarios = async () => {
+    cargando.value = true
+    error.value = null
+    try {
+      const { data } = await usuarioServices.obtenerUsuarios()
+      usuarios.value = data
+    } catch (err: any) {
+      error.value = err.message || 'Error al obtener usuarios'
+      throw err
+    } finally {
+      cargando.value = false
+    }
+  }
 
-      try {
-        const { data } = await usuarioServices.obtenerUsuarios()
-        this.usuarios = data
-      } catch (err: any) {
-        this.error = err.message || 'Error al obtener usuarios'
-      } finally {
-        this.cargando = false
-      }
-    },
+  const obtenerUsuario = async (id: number) => {
+    cargando.value = true
+    error.value = null
+    try {
+      const { data } = await usuarioServices.obtenerUsuario(id)
+      usuario.value = data
+    } catch (err: any) {
+      error.value = err.message || 'Error al obtener usuario'
+      throw err
+    } finally {
+      cargando.value = false
+    }
+  }
 
-    async obtenerUsuario(id: number) {
-      this.cargando = true
-      this.error = null
+  const crearUsuario = async (nuevoUsuario: Usuario) => {
+    cargando.value = true
+    error.value = null
+    try {
+      const { data } = await usuarioServices.crearUsuario(nuevoUsuario)
+      usuarios.value.push(data)
+      return data
+    } catch (err: any) {
+      error.value = err.message || 'Error al crear usuario'
+      throw err
+    } finally {
+      cargando.value = false
+    }
+  }
 
-      try {
-        const { data } = await usuarioServices.obtenerUsuario(id)
-        this.usuario = data
-      } catch (err: any) {
-        this.error = err.message || 'Error al obtener usuario'
-      } finally {
-        this.cargando = false
-      }
-    },
+  const modificarUsuario = async (id: number, datos: Usuario) => {
+    cargando.value = true
+    error.value = null
+    try {
+      const { data } = await usuarioServices.modificarUsuario(id, datos)
+      usuarios.value = usuarios.value.map((u) => (u.id === id ? data : u))
+      if (usuario.value?.id === id) usuario.value = data
+      return data
+    } catch (err: any) {
+      error.value = err.message || 'Error al actualizar usuario'
+      throw err
+    } finally {
+      cargando.value = false
+    }
+  }
 
-    async crearUsuario(usuario: Usuario) {
-      this.cargando = true
-      this.error = null
+  const eliminarUsuario = async (id: number) => {
+    cargando.value = true
+    error.value = null
+    try {
+      await usuarioServices.eliminarUsuario(id)
+      usuarios.value = usuarios.value.filter((u) => u.id !== id)
+      if (usuario.value?.id === id) usuario.value = null
+      return true
+    } catch (err: any) {
+      error.value = err.message || 'Error al eliminar usuario'
+    } finally {
+      cargando.value = false
+    }
+  }
 
-      try {
-        const { data } = await usuarioServices.crearUsuario(usuario)
-        this.usuarios.push(data)
-        return data
-      } catch (err: any) {
-        this.error = err.message || 'Error al crear usuario'
-      } finally {
-        this.cargando = false
-      }
-    },
-
-    async modificarUsuario(id: number, usuario: Usuario) {
-      this.cargando = true
-      this.error = null
-
-      try {
-        const { data } = await usuarioServices.modificarUsuario(id, usuario)
-
-        // Reemplaza en el array
-        this.usuarios = this.usuarios.map((u) => (u.id === id ? data : u))
-
-        if (this.usuario?.id === id) {
-          this.usuario = data
-        }
-
-        return data
-      } catch (err: any) {
-        this.error = err.message || 'Error al actualizar usuario'
-      } finally {
-        this.cargando = false
-      }
-    },
-
-    async eliminarUsuario(id: number) {
-      this.cargando = true
-      this.error = null
-
-      try {
-        await usuarioServices.eliminarUsuario(id)
-
-        this.usuarios = this.usuarios.filter((u) => u.id !== id)
-
-        if (this.usuario?.id === id) {
-          this.usuario = null
-        }
-        return true
-      } catch (err: any) {
-        this.error = err.message || 'Error al eliminar usuario'
-      } finally {
-        this.cargando = false
-      }
-    },
-  },
+  return {
+    usuarios,
+    usuario,
+    cargando,
+    error,
+    obtenerUsuarios,
+    obtenerUsuario,
+    crearUsuario,
+    modificarUsuario,
+    eliminarUsuario,
+  }
 })

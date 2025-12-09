@@ -1,3 +1,5 @@
 {
-    "python.analysis.diagnosticsSource": "Pyright"
+    "python.analysis.diagnosticsSource": "Pyright",
+    "editor.fontFamily": "\"JetBrains Mono\"",
+    "git.ignoreLimitWarning": true
 }

@@ -9,7 +9,6 @@ class MascotaModel:
         nombre="",
         especie="",
         raza="",
-        edad=0,
         fecha_nacimiento="",
         sexo="",
         color="",
@@ -21,7 +20,6 @@ class MascotaModel:
         self.nombre = nombre
         self.especie = especie
         self.raza = raza
-        self.edad = edad
         self.fecha_nacimiento = fecha_nacimiento
         self.sexo = sexo
         self.color = color
@@ -35,7 +33,6 @@ class MascotaModel:
             "nombre": self.nombre,
             "especie": self.especie,
             "raza": self.raza,
-            "edad": self.edad,
             "fecha_nacimiento": self.fecha_nacimiento,
             "sexo": self.sexo,
             "color": self.color,
@@ -44,7 +41,6 @@ class MascotaModel:
             "fecha_registro": self.fecha_registro,
         }
 
-        # 🔥 Agregar SIEMPRE los datos del dueño
         if self.id_usuario:
             duenio = UsuarioModel(id=self.id_usuario).obtener_usuario()
             if duenio:
@@ -52,10 +48,6 @@ class MascotaModel:
                 data["duenio"] = duenio
 
         return data
-
-    # ============================================================
-    # CRUD
-    # ============================================================
 
     @staticmethod
     def obtener_mascotas():
@@ -95,15 +87,15 @@ class MascotaModel:
                 cursor.execute(
                     """
                     INSERT INTO mascotas 
-                    (nombre, especie, raza, edad, fecha_nacimiento, sexo, color, peso, id_usuario)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    (nombre, especie, raza,fecha_nacimiento, fecha_registro, sexo, color, peso, id_usuario)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     """,
                     (
                         data["nombre"],
                         data["especie"],
                         data["raza"],
-                        data["edad"],
                         data["fecha_nacimiento"],
+                        data["fecha_registro"],
                         data["sexo"],
                         data["color"],
                         data["peso"],
@@ -123,7 +115,7 @@ class MascotaModel:
                 cursor.execute(
                     """
                     UPDATE mascotas SET 
-                    nombre=%s, especie=%s, raza=%s, edad=%s, fecha_nacimiento=%s, 
+                    nombre=%s, especie=%s, raza=%s,fecha_nacimiento=%s, fecha_registro=%s,
                     sexo=%s, color=%s, peso=%s, id_usuario=%s
                     WHERE id=%s
                     """,
@@ -131,8 +123,8 @@ class MascotaModel:
                         data["nombre"],
                         data["especie"],
                         data["raza"],
-                        data["edad"],
                         data["fecha_nacimiento"],
+                        data["fecha_registro"],
                         data["sexo"],
                         data["color"],
                         data["peso"],

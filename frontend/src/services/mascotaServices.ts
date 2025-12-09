@@ -5,20 +5,23 @@ export default {
   obtenerMascotas() {
     return api.get('/mascotas')
   },
+  obtenerMascotasFront() {
+    return api.get('/mascotasfront')
+  },
 
   obtenerMascota(id: number) {
-    return api.get(`/mascota/${id}`)
+    return api.get(`/mascotas/${id}`)
   },
 
   crearMascota(mascota: Mascota) {
-    return api.post('/mascota', mascota)
+    return api.post('/mascotas', mascota)
   },
 
   eliminarMascota(id: number) {
-    return api.delete(`/mascota/${id}`)
+    return api.delete(`/mascotas/${id}`)
   },
   modificarMascota(id: number, mascota: Mascota) {
-    return api.put(`/mascota/${id}`, mascota)
+    return api.put(`/mascotas/${id}`, mascota)
   },
 }
 

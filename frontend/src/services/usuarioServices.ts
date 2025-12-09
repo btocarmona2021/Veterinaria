@@ -7,16 +7,16 @@ export default {
   },
 
   obtenerUsuario(id: number) {
-    return api.get(`/usuario/${id}`)
+    return api.get(`/usuarios/${id}`)
   },
 
   crearUsuario(usuario: Usuario) {
-    return api.post('/usuario', usuario)
+    return api.post('/usuarios', usuario)
   },
   eliminarUsuario(id: number) {
-    return api.put(`/usuario/${id}`)
+    return api.delete(`/usuarios/${id}`)
   },
   modificarUsuario(id: number, usuario: Usuario) {
-    return api.put(`/usuario/${id}`, usuario)
+    return api.put(`/usuarios/${id}`, usuario)
   }
 }

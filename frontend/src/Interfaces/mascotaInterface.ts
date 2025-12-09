@@ -1,6 +1,7 @@
+import type { Usuario } from "./usuarioInterface"
 export interface Mascota {
   color: string
-  duenio?: Duenio
+  duenio?: Usuario
   edad: number
   especie: string
   fecha_nacimiento: string
@@ -8,21 +9,8 @@ export interface Mascota {
   id: number
   id_usuario: number
   nombre: string
-  peso?: number
+  peso: number
   raza: string
-  sexo: string
+  sexo: 'Macho' | 'Hembra'
 }
 
-export interface Duenio {
-  activo: number
-  apellido: string
-  direccion: string
-  disponible: number
-  email: string
-  especialidad: null
-  fecha_registro: string
-  id: number
-  nombre: string
-  rol: string
-  telefono: string
-}

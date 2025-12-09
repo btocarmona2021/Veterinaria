@@ -12,15 +12,32 @@ class UsuarioController:
 
     @staticmethod
     def crear_usuario(data: dict):
-        print(data)
         usuario = UsuarioModel(**data)
-        return usuario.crear_usuario()
+        if not usuario.email or not usuario.password:
+            return {
+                "message": "Debe comp   letar todos los campos",
+                "status_code": 500,
+            }
+        # existe_email = UsuarioModel.email_existe(usuario.email)
+        # if existe_email:
+        #     return {
+        #         "message": "Este correo electronico ya se encuentra registrado",
+        #         "status_code": 409,
+        #     }
+
+        resultado = usuario.crear_usuario()
+
+        if resultado:
+            return {
+                "message": "El usuario ha sido creado correctamente",
+                "status_code": 201,
+            }
+
+        return {"message": "Error al crear el usuario", "status_code": 500}
 
     @staticmethod
     def modificar_usuario(id, data: dict):
-        data["id"] = id
-        usuario = UsuarioModel(**data)
-        return usuario.modificar_usuario()
+        return UsuarioModel.modificar_usuario(id,data)
 
     @staticmethod
     def eliminar_usuario(id):

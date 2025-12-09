@@ -1,10 +1,11 @@
 from flask import request, jsonify, Blueprint
 from .usuario_controller import UsuarioController
+from flask_jwt_extended import jwt_required
 
 usuario_bp = Blueprint("usuario_bp", __name__)
 
 
-@usuario_bp.route("/usuario", methods=["POST"])
+@usuario_bp.route("/usuarios", methods=["POST"])
 def crear_usuario():
     try:
         data = request.get_json()
@@ -30,7 +31,8 @@ def obtener_usuarios():
         return jsonify({"error": str(e)}), 500
 
 
-@usuario_bp.route("/usuario/<int:id>", methods=["GET"])
+@usuario_bp.route("/usuarios/<int:id>", methods=["GET"])
+@jwt_required()
 def obtener_usuario(id):
     try:
         usuario = UsuarioController.obtener_usuario(id)
@@ -42,21 +44,25 @@ def obtener_usuario(id):
         return jsonify({"error": str(e)}), 500
 
 
-@usuario_bp.route("/usuario/<int:id>", methods=["PUT"])
+@usuario_bp.route("/usuarios/<int:id>", methods=["PUT"])
+@jwt_required()
 def modificar_usuario(id):
     try:
         data = request.get_json()
+
+      
         if not data:
             return jsonify({"error": "Datos inválidos"}), 400
-
         modificado = UsuarioController.modificar_usuario(id, data)
-        return jsonify({"modificado": modificado}), 200
+        if modificado:
+            return jsonify({"message": "Usuario modificado exitosamente"}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
-@usuario_bp.route("/usuario/<int:id>", methods=["DELETE"])
+@usuario_bp.route("/usuarios/<int:id>", methods=["DELETE"])
+@jwt_required()
 def eliminar_usuario(id):
     try:
         eliminado = UsuarioController.eliminar_usuario(id)
@@ -64,7 +70,7 @@ def eliminar_usuario(id):
         if eliminado:
             return jsonify({"message": "Usuario eliminado correctamente"}), 200
         else:
-            return jsonify({"error": "Usuario no encontrado"}), 404
+            return jsonify({"error": "No se en contro el usaurio"}), 404
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

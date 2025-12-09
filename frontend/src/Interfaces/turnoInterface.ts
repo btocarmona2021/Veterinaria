@@ -1,28 +1,18 @@
+import type { Mascota } from "./mascotaInterface";
+import type { Servicio } from '@/Interfaces/servicioInterface';
+import type{ Usuario } from "./usuarioInterface";
+
 export interface Turno {
-  estado:         string;
-  fecha_creacion: string;
-  fecha_hora:     string;
   id:             number;
-  mascota?:        Mascota;
+  fecha_hora:     string;
+  id_mascota:     number;
+  id_veterinario: number;
+  id_servicio:    number;
+  estado:         string;
   notas:          string;
-  servicio?:       Servicio;
-  veterinario?:    Veterinario;
+  fecha_creacion: string;
+  mascota?:        Mascota
+  servicio?:       Servicio
+  veterinario?:    Usuario
 }
 
-export interface Mascota {
-  id:     number;
-  nombre: string;
-  raza:   string;
-}
-
-export interface Servicio {
-  id:     number;
-  nombre: string;
-  precio: string;
-}
-
-export interface Veterinario {
-  apellido: string;
-  id:       number;
-  nombre:   string;
-}
