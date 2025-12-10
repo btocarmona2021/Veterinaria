@@ -192,7 +192,7 @@ onMounted(async () => {
                     <label>Hora</label>
                     <div class="input-box">
                         <Icon icon="mdi:clock-outline" class="input-icon" />
-                        <input type="time" v-model="fecha_hora" />
+                        <input type="time" v-model="fecha_hora" min="08:00" max="20:00" />
                     </div>
                 </div>
 

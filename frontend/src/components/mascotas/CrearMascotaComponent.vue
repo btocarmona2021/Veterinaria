@@ -133,17 +133,6 @@ onMounted(async () => {
                 </div>
 
                 <div class="input-group">
-                    <label>Edad</label>
-                    <div class="input-box">
-                        <input
-                            v-model="edad"
-                            type="number"
-                            placeholder="Edad"
-                        />
-                    </div>
-                </div>
-
-                <div class="input-group">
                     <label>Fecha de Nacimiento</label>
                     <div class="input-box">
                         <input v-model="fecha_nacimiento" type="date" />

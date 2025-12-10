@@ -88,7 +88,7 @@ class MascotaModel:
                     """
                     INSERT INTO mascotas 
                     (nombre, especie, raza,fecha_nacimiento, fecha_registro, sexo, color, peso, id_usuario)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     """,
                     (
                         data["nombre"],

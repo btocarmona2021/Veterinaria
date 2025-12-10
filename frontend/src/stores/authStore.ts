@@ -40,7 +40,7 @@ const useAuthStore = defineStore('auth',() => {
     return { usuarioAutorizado, estaAutorizado, login, logout }
   },
   {
-    persist: false,
+    persist: true,
   },
 )
 export default useAuthStore
