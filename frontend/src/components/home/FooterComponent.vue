@@ -15,10 +15,15 @@
         </div>
 
         <div class="col-md-4 mb-3 mb-md-0 text-center">
-          <p class="fw-semibold m-0">© 2025 Todos los derechos reservados</p>
-          <p class="small text-muted m-0">
-            Calle Intentente Francisco San Martin 69 | Tel: 2920286288 | Carmona Ruben Alberto
-          </p>
+          <img
+            src="/img/logoc.png"
+            alt="Universidad Nacional del Comahue"
+            class="unco-logo mb-2"
+          />
+          <p class="fw-semibold mb-1">Trabajo práctico final</p>
+          <p class="small text-muted m-0">Materia: Programación Web Dinámica</p>
+          <p class="small text-muted m-0">Profesor: Eduardo Guerra</p>
+          <p class="small text-muted mt-1 m-0">Autor: Rubén Alberto Carmona</p>
         </div>
 
         <div class="col-md-4 d-flex justify-content-center justify-content-md-end gap-3">
@@ -36,6 +41,10 @@
           </a>
         </div>
 
+      </div>
+
+      <div class="text-center mt-3">
+        <p class="small text-muted m-0">© 2025 · Todos los derechos reservados</p>
       </div>
 
     </div>
@@ -62,7 +71,11 @@ import { Icon } from "@iconify/vue";
   color: #111827;
 }
 
-/* ICONOS */
+.unco-logo {
+  max-height: 48px;
+  object-fit: contain;
+}
+
 .footer-icon {
   display: flex;
   align-items: center;

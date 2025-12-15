@@ -1,10 +1,9 @@
 from flask_jwt_extended import create_access_token
-
+from ..usuarios.usuario_model import UsuarioModel as Usuario
 
 class AuthModel:
     @staticmethod
     def login(email: str, password: str) -> dict:
-        from ..usuarios.usuario_model import UsuarioModel as Usuario
 
         user = Usuario.obtener_usuario_por_email(email)
 
