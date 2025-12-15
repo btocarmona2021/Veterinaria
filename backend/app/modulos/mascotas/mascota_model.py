@@ -133,7 +133,7 @@ class MascotaModel:
                     ),
                 )
                 conn.commit()
-                return True
+                return cursor.rowcount > 0
         finally:
             conn.close()
 

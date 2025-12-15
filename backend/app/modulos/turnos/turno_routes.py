@@ -37,7 +37,7 @@ def crear_turno():
 @jwt_required()
 def modificar_turno(id):
     data = request.get_json()
-    print(data)
+
     if not data:
         return jsonify({"error": "Datos inválidos"}), 400
 
